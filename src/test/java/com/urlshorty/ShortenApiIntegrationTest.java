@@ -288,6 +288,28 @@ class ShortenApiIntegrationTest {
                 .andExpect(jsonPath("$.path").value("/not-a-real-endpoint"));
     }
 
+    @Test
+    @DisplayName("the OpenAPI document advertises the status codes the API really returns")
+    void openApiDocumentMatchesTheRealStatusCodes() throws Exception {
+        mockMvc.perform(get("/v3/api-docs"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.info.title").value("urlshorty"))
+                // POST /shorten really answers 201, and must not be advertised as 200.
+                .andExpect(jsonPath("$['paths']['/shorten']['post']['responses']['201']").exists())
+                .andExpect(jsonPath("$['paths']['/shorten']['post']['responses']['200']").doesNotExist())
+                .andExpect(jsonPath("$['paths']['/shorten']['post']['responses']['400']").exists())
+                // DELETE really answers 204 with no body.
+                .andExpect(jsonPath("$['paths']['/shorten/{shortCode}']['delete']['responses']['204']").exists())
+                .andExpect(jsonPath("$['paths']['/shorten/{shortCode}']['delete']['responses']['200']").doesNotExist())
+                // The reads and the update, with their not-found cases.
+                .andExpect(jsonPath("$['paths']['/shorten/{shortCode}']['get']['responses']['200']").exists())
+                .andExpect(jsonPath("$['paths']['/shorten/{shortCode}']['get']['responses']['404']").exists())
+                .andExpect(jsonPath("$['paths']['/shorten/{shortCode}']['put']['responses']['200']").exists())
+                .andExpect(jsonPath("$['paths']['/shorten/{shortCode}']['put']['responses']['404']").exists())
+                .andExpect(jsonPath("$['paths']['/shorten/{shortCode}/stats']['get']['responses']['200']").exists())
+                .andExpect(jsonPath("$['paths']['/shorten/{shortCode}/stats']['get']['responses']['404']").exists());
+    }
+
     // ----------------------------------------------------------------- helpers
 
     /** Creates a short URL through the API and returns the generated short code. */

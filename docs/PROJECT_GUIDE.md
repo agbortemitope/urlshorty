@@ -552,6 +552,14 @@ alternative that was rejected, and the reason.
 | No authentication | API keys, OAuth | The brief says it is out of scope. Adding it without a design agreement would be inventing requirements |
 | OpenAPI via springdoc | Hand-written API docs | The documentation is generated from the code, so it cannot fall out of date |
 
+One caveat about generated documentation: springdoc can see the routes, the DTOs and the validation
+rules, but it *cannot* see a status code chosen programmatically inside a `ResponseEntity.created(...)`
+call - it assumes 200. The controller therefore carries explicit `@ApiResponse` annotations so the
+published document matches the wire: 201 for create, 204 for delete, and the 400 and 404 cases spelled
+out with the error schema. `OpenApiConfig` supplies the title and version. Without both of those, the
+docs would quietly claim the API returns 200 for everything - which is exactly what happened during
+development, and what a reviewer clicking through Swagger UI would have spotted.
+
 ---
 
 ## 13. What was left out, and how you would add it
