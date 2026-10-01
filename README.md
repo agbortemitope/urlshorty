@@ -4,8 +4,7 @@ A URL shortening service: a REST API that turns long URLs into short codes, reso
 updates and deletes them, and reports how many times each code has been used.
 
 Built with **Java 17** and **Spring Boot 3.3.5**, backed by an in-memory **H2** database by default
-and ready for **MySQL**. It implements the [roadmap.sh URL Shortening Service
-project](https://roadmap.sh/projects/url-shortening-service) specification.
+and ready for **MySQL**.
 
 ---
 
@@ -371,9 +370,3 @@ Honest list, all of them deliberate choices for a project of this scope:
   a migration tool such as Flyway so schema changes are versioned and reviewable.
 - **H2 forgets everything on restart** (in the default profile). Use the `mysql` profile to keep
   data.
-
----
-
-## Built from
-
-roadmap.sh project specification: <https://roadmap.sh/projects/url-shortening-service>
