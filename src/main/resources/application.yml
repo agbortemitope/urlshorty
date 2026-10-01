@@ -1,0 +1,49 @@
+# Default configuration. It runs with no external services installed: the database is an in-memory
+# H2 instance created fresh every time the application starts.
+spring:
+  application:
+    name: urlshorty
+
+  datasource:
+    url: jdbc:h2:mem:urlshorty;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+
+  jpa:
+    hibernate:
+      # "update" lets Hibernate build/alter the schema from the entity classes, which keeps the first
+      # run a one-command experience. A long-lived production deployment would use a migration tool
+      # such as Flyway instead; see docs/PROJECT_GUIDE.md.
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: true
+
+  h2:
+    console:
+      # Browse the data at http://localhost:8080/h2-console
+      # JDBC URL: jdbc:h2:mem:urlshorty  |  user: sa  |  password: (empty)
+      enabled: true
+      path: /h2-console
+
+  jackson:
+    default-property-inclusion: non_null
+    serialization:
+      write-dates-as-timestamps: false
+
+server:
+  port: 8080
+  error:
+    include-message: never
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+
+logging:
+  level:
+    com.urlshorty: INFO

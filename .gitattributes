@@ -1,0 +1,17 @@
+# Normalise line endings: LF in the repository, the platform convention on checkout.
+* text=auto
+
+# The Maven wrapper shell script is executed by sh/bash, including from WSL and Git Bash,
+# so it must keep Unix line endings even when checked out on Windows.
+mvnw text eol=lf
+*.sh text eol=lf
+
+# Windows scripts.
+*.cmd text eol=crlf
+*.bat text eol=crlf
+*.ps1 text eol=crlf
+
+# Binaries must never be converted or merged line by line.
+*.jar binary
+*.png binary
+*.jpg binary
